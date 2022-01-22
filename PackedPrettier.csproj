@@ -11,7 +11,7 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageTags>prettier;dotnet</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
       <developmentDependency>true</developmentDependency>
       <RepositoryType>git</RepositoryType>
       <RepositoryUrl>https://github.com/Gitii/PackedPrettier</RepositoryUrl>
@@ -32,10 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
+      <None Include="README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
 </Project>
