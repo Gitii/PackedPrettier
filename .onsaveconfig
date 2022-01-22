@@ -3,6 +3,6 @@
 command = dotnet
 arguments = csharpier "{file}"
 
-#[*.{js,ts,css,less,scss,vue,json,gql,md}]
-#command = dotnet
-#arguments = pprettier --write "{file}"
+[*.{js,ts,css,less,scss,vue,json,gql,md}]
+command = dotnet
+arguments = pprettier --write "{file}"
