@@ -25,7 +25,7 @@ mkdir -p "$DST_DIR/linux-x64/"
 yarn pkg -t node14-linux ./node_modules/prettier/bin-prettier.js -o "$DST_DIR/linux-x64/prettier"
 
 PRETTIER_VERSION=$(yarn list --pattern prettier --depth=0 --json --non-interactive --no-progress | \
-    jq -r '.data.trees[].name' | grep "^prettier" | sed -E 's/prettier@(.+)/\1/')
+    jq -r '.data.trees[].name' | grep "^prettier@" | sed -E 's/prettier@(.+)/\1/')
 
 echo -n $PRETTIER_VERSION > "$DST_DIR/version"
 
