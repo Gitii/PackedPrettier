@@ -16,7 +16,7 @@ It is written in `javascript` and requires `node` to run.
 
 Including `node`.
 
-You can install it using `dotnet tool install`, both as global and local tool. 
+You can install it using `dotnet tool install`, both as global and local tool.
 
 # Found a bug? Have a suggestion?
 
@@ -26,4 +26,4 @@ Pull requests are always welcome :heart_eyes:
 
 ## License
 
-This software is released under the [MIT License](https://opensource.org/licenses/MIT). 
+This software is released under the [MIT License](https://opensource.org/licenses/MIT).
