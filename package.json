@@ -1,0 +1,13 @@
+{
+  "name": "prettier-packed",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "prettier": "^2.5.1"
+  },
+  "devDependencies": {
+    "pkg": "^5.5.2"
+  }
+}
