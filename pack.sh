@@ -14,18 +14,19 @@ pushd "$TEMP_DIR"
 echo "Using temporary directory $TEMP_DIR"
 echo "Target directory is $DST_DIR"
 
-cp "$SRC_DIR/package.json" "$TEMP_DIR/package.json" 
+cp "$SRC_DIR/package.json" "$TEMP_DIR/package.json"
+cp "$SRC_DIR/pkg.config.json" "$TEMP_DIR/pkg.config.json"
 
 yarn install
 
 mkdir -p "$DST_DIR/win-x64/"
-yarn pkg -t node14-win ./node_modules/prettier/bin-prettier.js -o "$DST_DIR/win-x64/prettier.exe"
+yarn pkg -t node14-win ./node_modules/prettier/bin-prettier.js -o "$DST_DIR/win-x64/prettier.exe" --config ./pkg.config.json
 
 mkdir -p "$DST_DIR/linux-x64/"
-yarn pkg -t node14-linux ./node_modules/prettier/bin-prettier.js -o "$DST_DIR/linux-x64/prettier"
+yarn pkg -t node14-linux ./node_modules/prettier/bin-prettier.js -o "$DST_DIR/linux-x64/prettier" --config ./pkg.config.json
 
-PRETTIER_VERSION=$(yarn list --pattern prettier --depth=0 --json --non-interactive --no-progress | \
-    jq -r '.data.trees[].name' | grep "^prettier@" | sed -E 's/prettier@(.+)/\1/')
+PRETTIER_VERSION=$(yarn list --pattern prettier --depth=0 --json --non-interactive --no-progress \
+    | jq -r '.data.trees[].name' | grep "^prettier@" | sed -E 's/prettier@(.+)/\1/')
 
 echo -n $PRETTIER_VERSION > "$DST_DIR/version"
 
