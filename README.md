@@ -18,6 +18,57 @@ Including `node`.
 
 You can install it using `dotnet tool install`, both as global and local tool. 
 
+# Getting started
+
+## Installation
+
+Install as local `dotnet tool`:
+
+```shell
+dotnet new tool-manifest # if PackedPrettier is your first tool
+dotnet tool install PackedPrettier # will take a few seconds
+```
+
+## How to use
+
+In the terminal:
+
+```shell
+dotnet pprettier --help
+```
+
+> :exclamation: The command is named `pprettier` for brevity and internally `prettier` is executed.
+
+In Visual Studio
+
+1. Install extension [RunOnSave: A Visual Studio extension that can run commands on files when they're saved.](https://github.com/waf/RunOnSave)
+
+2. Create a`.onsaveconfig` with this content:
+   
+   ```textile
+   [*.{js,ts,css,less,scss,vue,json,gql,md}]
+   command = dotnet
+   arguments = pprettier --write "{file}"
+   ```
+
+When you save a file in VS, `prettier` will reformat it
+
+# Supported Framework & Platforms
+
+* .Net Standard 2.1
+
+* .Net 5
+
+* .Net 6
+
+on the platforms
+
+* Windows x64
+
+* Linux x64
+
+
+
 # Found a bug? Have a suggestion?
 
 Please [create an issue](https://github.com/Gitii/PackedPrettier/issues).
