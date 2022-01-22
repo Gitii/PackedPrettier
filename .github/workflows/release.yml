@@ -33,7 +33,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: "./nupkg/*.nupkg"
-          name: "${{ prettierVersion }}.${{ github.run_number }} (revision ${{ steps.tagName.outputs.tag }})"
+          name: "${{ env.prettierVersion }}.${{ github.run_number }} (revision ${{ steps.tagName.outputs.tag }})"
 #      - name: Push packages to Nuget registry
 #        run: dotnet nuget push $(Get-ChildItem -Path ./nupkg -Filter "*.nupkg").FullName --source "https://api.nuget.org/v3/index.json" --api-key "$env:NUGET_API_KEY" --skip-duplicate --no-symbols 1
 #        env:
