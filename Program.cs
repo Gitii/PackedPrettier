@@ -12,9 +12,6 @@ namespace PackedPrettier
     {
         static Task<int> Main(string[] args)
         {
-            Console.WriteLine(AppContext.BaseDirectory);
-            Console.WriteLine(System.Reflection.Assembly.GetExecutingAssembly().Location);
-
             var prettierCLi = GetPlatformPrettier(AppContext.BaseDirectory);
 
             return ExecutePrettierAsync(prettierCLi, args);
@@ -28,6 +25,7 @@ namespace PackedPrettier
 
             var result = await Cli.Wrap(prettierCLi)
                 .WithArguments(args)
+                .WithValidation(CommandResultValidation.None)
                 .WithStandardOutputPipe(PipeTarget.ToStream(stdOut))
                 .WithStandardErrorPipe(PipeTarget.ToStream(stdErr))
                 .WithStandardInputPipe(PipeSource.FromStream(stdIn, true))
@@ -41,7 +39,9 @@ namespace PackedPrettier
         {
             if (!Environment.Is64BitOperatingSystem)
             {
-                throw new PlatformNotSupportedException("Only 64bit operating systems are supported.");
+                throw new PlatformNotSupportedException(
+                    "Only 64bit operating systems are supported."
+                );
             }
 
             switch (Environment.OSVersion.Platform)
@@ -57,7 +57,8 @@ namespace PackedPrettier
                 case PlatformID.MacOSX:
                 default:
                     throw new PlatformNotSupportedException(
-                        $"Platform {Environment.OSVersion.Platform} is not supported.");
+                        $"Platform {Environment.OSVersion.Platform} is not supported."
+                    );
             }
         }
     }

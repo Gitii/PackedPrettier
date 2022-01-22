@@ -11,6 +11,14 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageTags>prettier;dotnet</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
+      <developmentDependency>true</developmentDependency>
+      <RepositoryType>git</RepositoryType>
+      <RepositoryUrl>https://github.com/Gitii/PackedPrettier</RepositoryUrl>
+      <PackageProjectUrl>https://github.com/Gitii/PackedPrettier</PackageProjectUrl>
+      <Description>The opinionated code formatter Prettier packed as dotnet tool.</Description>
+      <Authors>Gitii</Authors>
+      <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +29,10 @@
     <None Update="packed\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+      <None Include="README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
 </Project>
