@@ -1,13 +1,15 @@
 {
-  "name": "prettier-packed",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "private": false,
-  "dependencies": {
-    "prettier": "^2.5.1"
-  },
-  "devDependencies": {
-    "pkg": "^5.5.2"
-  }
+    "name": "prettier-packed",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "private": false,
+    "dependencies": {
+        "prettier": "^2.5.1",
+        "@prettier/plugin-xml": "^1.2.0",
+        "prettier-plugin-sh": "^0.8.1"
+    },
+    "devDependencies": {
+        "pkg": "^5.5.2"
+    }
 }

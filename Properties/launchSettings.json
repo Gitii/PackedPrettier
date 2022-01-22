@@ -1,8 +1,8 @@
 {
-  "profiles": {
-    "PackedPrettier": {
-      "commandName": "Project",
-      "commandLineArgs": "--help"
+    "profiles": {
+        "PackedPrettier": {
+            "commandName": "Project",
+            "commandLineArgs": "--help"
+        }
     }
-  }
 }

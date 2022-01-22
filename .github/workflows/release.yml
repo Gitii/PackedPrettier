@@ -1,0 +1,40 @@
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
+        with:
+          tagRegex: "v(.*)" 
+          tagRegexGroup: 1
+      - uses: actions/checkout@v2
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: | 
+            3.1.x
+            5.0.x
+            6.0.x
+          include-prerelease: true
+      - name: Pack prettier
+        run: ./pack.sh
+      - name: Determine prettier version
+        run: echo "prettierVersion=$(cat ./packed/version)" >> $GITHUB_ENV
+      - name: Bundle
+        run: ./bundle.sh "$BUILD_NUMBER"
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+      - name: Attach nuget packages to Github releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "./nupkg/*.nupkg"
+          name: "${{ env.prettierVersion }}.${{ github.run_number }} (revision ${{ steps.tagName.outputs.tag }})"
+      - name: Push packages to Nuget registry
+        run: dotnet nuget push ./nupkg/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY" --skip-duplicate --no-symbols 1
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
