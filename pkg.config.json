@@ -1,0 +1,10 @@
+{
+    "pkg": {
+        "scripts": [
+            "./node_modules/@prettier/plugin-xml/**/*.js",
+            "./node_modules/@prettier/plugin-xml/**/*.json",
+            "./node_modules/prettier-plugin-sh/**/*.cjs",
+            "./node_modules/prettier-plugin-sh/**/*.json"
+        ]
+    }
+}

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CliWrap;
@@ -14,7 +17,49 @@ namespace PackedPrettier
         {
             var prettierCLi = GetPlatformPrettier(AppContext.BaseDirectory);
 
-            return ExecutePrettierAsync(prettierCLi, args);
+            var variables = GetVariables();
+
+            var expandedArgs = ExpandArgs(args, variables);
+
+            return ExecutePrettierAsync(prettierCLi, expandedArgs);
+        }
+
+        private static IReadOnlyList<(string key, string value)> GetVariables()
+        {
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32S:
+                case PlatformID.Win32Windows:
+                case PlatformID.Win32NT:
+                case PlatformID.WinCE:
+                    return new List<(string key, string value)>()
+                    {
+                        ("<NodeModulesPath>", "C:\\snapshot\\node_modules"),
+                    };
+                case PlatformID.Unix:
+                    return new List<(string key, string value)>() { ("<NodeModulesPath>", "/snapshot/node_modules") };
+                case PlatformID.Xbox:
+                case PlatformID.MacOSX:
+                default:
+                    throw new PlatformNotSupportedException(
+                        $"Platform {Environment.OSVersion.Platform} is not supported."
+                    );
+            }
+        }
+
+        private static string[] ExpandArgs(
+            string[] args,
+            IReadOnlyList<(string key, string value)> variables
+        )
+        {
+            return args.Select(
+                    (arg) =>
+                        variables.Aggregate(
+                            arg,
+                            (current, keyValue) => current.Replace(keyValue.key, keyValue.value)
+                        )
+                )
+                .ToArray();
         }
 
         private static async Task<int> ExecutePrettierAsync(string prettierCLi, string[] args)

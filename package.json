@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "license": "MIT",
-    "private": false,
+    "private": true,
     "dependencies": {
         "prettier": "^2.5.1",
         "@prettier/plugin-xml": "^1.2.0",
