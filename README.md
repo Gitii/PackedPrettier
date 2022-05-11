@@ -44,12 +44,12 @@ In Visual Studio
 1. Install [RunOnSave: A Visual Studio extension that can run commands on files when they're saved.](https://github.com/waf/RunOnSave)
 
 2. Create a `.onsaveconfig` with this content:
-   
-   ```textile
-   [*.{js,jsx,ts,tsx,css,less,scss,vue,json,gql,md}]
-   command = dotnet
-   arguments = pprettier --write "{file}"
-   ```
+
+    ```textile
+    [*.{js,jsx,ts,tsx,css,less,scss,vue,json,gql,md}]
+    command = dotnet
+    arguments = pprettier --write "{file}"
+    ```
 
 When you save a file in VS, `prettier` will reformat it
 
@@ -57,17 +57,29 @@ When you save a file in VS, `prettier` will reformat it
 
 By default, two plugins are included (always the latest version at time of compilation of `prettier`):
 
-* [prettier/plugin-xml: Prettier XML plugin](https://github.com/prettier/plugin-xml)
+-   [prettier/plugin-xml: Prettier XML plugin](https://github.com/prettier/plugin-xml)
 
-* [prettier-plugin-sh](https://github.com/rx-ts/prettier/tree/master/packages/sh)
+-   [prettier-plugin-sh](https://github.com/rx-ts/prettier/tree/master/packages/sh)
 
 They aren't used by default. You need to tell `prettier` where to find them.
 
-Because the plugins are part of the packed `prettier` binary, the files are stored in a virtual filesystem and a special lookup path needs to be used:
+Because the plugins are part of the packed `prettier` binary, the files are stored in a virtual filesystem.
+
+For Windows that's `C:\snapshot\node_modules` and `/snapshot/node_modules` for unix systems.
+
+So if you want to load `prettier/plugin-xml`, then you need to write:
+
+```shell
+dotnet pprettier --write <file path> --plugin=/snapshot/node_modules/@prettier/plugin-xml
+```
+
+To make this portable, `PackedPrettier` will replace `<NodeModulesPath>` at runtime with the correct path:
 
 ```shell
 dotnet pprettier --write <file path> --plugin=<NodeModulesPath>/@prettier/plugin-xml
 ```
+
+This will work on any operating system.
 
 Example with `test.xml`:
 
@@ -83,17 +95,16 @@ dotnet pprettier --write test.xml --plugin=<NodeModulesPath>/@prettier/plugin-xm
 ## Custom `.onsaveconfig` entries
 
 ```
-[*.{xml,csproj,xaml}]
+[*.{xml,csproj,xaml,appxmanifest,props,wapproj}]
 command = dotnet
-arguments = pprettier --write "{file}" --plugin "<NodeModulesPath>/@prettier/plugin-xml"
+arguments = pprettier --write "{file}" --plugin "<NodeModulesPath>/@prettier/plugin-xml" --parser "xml"
 
 [*.sh]
 command = dotnet
 arguments = pprettier --write "{file}" --plugin "<NodeModulesPath>/prettier-plugin-sh"
-
 ```
 
-# What about C# files (*.cs*)?
+# What about C# files (_.cs_)?
 
 There is a (sort of) port of `prettier` that supports `cs` files:
 
@@ -109,17 +120,17 @@ arguments = csharpier "{file}"
 
 `prettier` is compiled for
 
-- Windows x64
+-   Windows x64
 
-- Linux x64
+-   Linux x64
 
-and the loader requires
+and the loader requires either
 
-* .Net Standard 2.1
+-   .Net Core 3.1
 
-* .Net 5
+-   .Net 5
 
-* .Net 6
+-   .Net 6
 
 # Found a bug? Have a suggestion?
 
