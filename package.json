@@ -4,11 +4,7 @@
     "main": "index.js",
     "license": "MIT",
     "private": true,
-    "dependencies": {
-        "prettier": "^2.5.1",
-        "@prettier/plugin-xml": "^1.2.0",
-        "prettier-plugin-sh": "^0.8.1"
-    },
+    "dependencies": {},
     "devDependencies": {
         "pkg": "^5.5.2"
     }
