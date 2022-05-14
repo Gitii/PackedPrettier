@@ -1,4 +1,4 @@
-name: "Create release when there is a new prettier release"
+name: "Trigger release when there is a new prettier release"
 
 on:
     schedule:
