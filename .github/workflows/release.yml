@@ -1,5 +1,10 @@
+name: "Create release and publish it"
+
 on:
     push:
+        tags:
+            - "v*"
+    create:
         tags:
             - "v*"
 
