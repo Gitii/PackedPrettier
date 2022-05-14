@@ -3,11 +3,13 @@ name: "Create release when there is a new prettier release"
 on:
     schedule:
         - cron: "0 0 * * *"
+    workflow_dispatch:
 
 jobs:
     publish:
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/checkout@v2
             - name: Get latest prettier release
               run: echo "PRETTIER_TAG_NAME=$(curl -sL https://api.github.com/repos/prettier/prettier/releases/latest | jq -r ".tag_name")" >> $GITHUB_ENV
             - name: Get latest own release
