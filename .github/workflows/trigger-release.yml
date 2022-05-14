@@ -8,6 +8,7 @@ on:
 jobs:
     publish:
         runs-on: ubuntu-latest
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         steps:
             - uses: actions/checkout@v2
             - name: Get latest prettier release
