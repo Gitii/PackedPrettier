@@ -1,4 +1,4 @@
-name: "Trigger release when there is a new prettier release"
+name: "On prettier publish, trigger publish"
 
 on:
     schedule:
@@ -14,9 +14,13 @@ jobs:
               run: echo "PRETTIER_TAG_NAME=v$(curl -sL https://api.github.com/repos/prettier/prettier/releases/latest | jq -r ".tag_name")" >> $GITHUB_ENV
             - name: Get latest own release
               run: echo "TAG_NAME=$(curl -sL https://api.github.com/repos/Gitii/PackedPrettier/releases/latest | jq -r ".tag_name")" >> $GITHUB_ENV
-            - name: Create new release when there is a new prettier release
-              uses: rickstaa/action-create-tag@v1
+            - uses: rickstaa/action-create-tag@v1
               if: ${{ env.PRETTIER_TAG_NAME != env.TAG_NAME }}
               with:
-                  tag: "${{ env.PRETTIER_TAG_NAME }}"
-                  message: "Update for new prettier release ${{ env.PRETTIER_TAG_NAME }}"
+                tag: "${{ env.PRETTIER_TAG_NAME }}"
+            - name: Create new release when there is a new prettier release
+              uses: .github/workflows/publish.yml@refactor-workflows
+              if: ${{ env.PRETTIER_TAG_NAME != env.TAG_NAME }}
+              with:
+                commit: ${{ github.event.head_commit.sha }}
+                version: "${{ env.PRETTIER_TAG_NAME }}"

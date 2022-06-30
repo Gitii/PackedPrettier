@@ -1,0 +1,20 @@
+name: "On tag creation, trigger publish"
+
+on:
+    push:
+        tags:
+            - "v*"
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: olegtarasov/get-tag@v2.1
+              id: tagName
+              with:
+                  tagRegex: "v(.*)"
+                  tagRegexGroup: 1
+            - uses: .github/workflows/publish.yml@refactor-workflows
+              with:
+                version: "${{ steps.tagName.outputs.tag }}"
+                commit: "${{ github.sha }}"
