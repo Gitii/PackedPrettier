@@ -1,0 +1,44 @@
+name: "Publish"
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: 'The version'
+        required: true
+        type: string
+      commit:
+        description: 'The commit of this version'
+        required: true
+        type: string
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup .NET SDKs
+              uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: |
+                      3.1.x
+                      6.0.x
+                  include-prerelease: true
+            - name: Pack prettier
+              run: ./pack.sh "${{ inputs.version }}"
+            - name: Bundle
+              run: ./bundle.sh "$BUILD_NUMBER"
+              env:
+                  BUILD_NUMBER: ${{ github.run_number }}
+            - name: Attach nuget packages to Github releases
+              uses: softprops/action-gh-release@v1
+              with:
+                  files: "./nupkg/*.nupkg"
+                  name: "${{ inputs.version }}"
+                  tag_name: "${{ inputs.version }}"
+                  target_commitish: "${{ inputs.commit }}"
+                  prerelease: ${{ contains(inputs.version, '-') }}
+            - name: Push packages to Nuget registry
+              run: dotnet nuget push ./nupkg/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY" --skip-duplicate --no-symbols
+              env:
+                  NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
