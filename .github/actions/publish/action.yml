@@ -17,6 +17,10 @@ inputs:
     description: 'The api key of the nuget repository'
     required: true
     type: string
+  release_notes:
+    description: 'The release notes'
+    required: true
+    type: string
 runs:
   using: "composite"
   steps:
@@ -39,6 +43,7 @@ runs:
       uses: softprops/action-gh-release@v1
       with:
           files: "./nupkg/*.nupkg"
+          body: "${{ inputs.release_notes }}"
           name: "${{ inputs.version }}"
           tag_name: "${{ inputs.version }}"
           target_commitish: "${{ inputs.commit }}"
