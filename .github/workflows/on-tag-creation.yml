@@ -20,4 +20,4 @@ jobs:
                 version: "${{ steps.tagName.outputs.tag }}"
                 commit: "${{ github.sha }}"
                 build_number: "${{ github.run_number }}"
-                nuget_api_key: "${{ inputs.nuget_api_key }}"
+                nuget_api_key: "${{ secrets.NUGET_API_KEY }}"
