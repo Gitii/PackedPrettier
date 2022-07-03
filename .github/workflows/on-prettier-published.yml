@@ -11,9 +11,13 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Get latest prettier release
-              run: echo "PRETTIER_TAG_NAME=v$(curl -sL https://api.github.com/repos/prettier/prettier/releases/latest | jq -r ".tag_name")" >> $GITHUB_ENV
+              run: |
+                TAG_NAME="$(curl -sL https://api.github.com/repos/prettier/prettier/releases/latest | jq -r ".tag_name")"
+                echo "PRETTIER_TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
             - name: Get latest own release
-              run: echo "TAG_NAME=$(curl -sL https://api.github.com/repos/Gitii/PackedPrettier/releases/latest | jq -r ".tag_name")" >> $GITHUB_ENV
+              run: |
+                TAG_NAME="$(curl -sL https://api.github.com/repos/Gitii/PackedPrettier/releases/latest | jq -r ".tag_name")"
+                echo "TAG_NAME=${TAG_NAME#v}" >> $GITHUB_ENV
             - uses: rickstaa/action-create-tag@v1
               if: ${{ env.PRETTIER_TAG_NAME != env.TAG_NAME }}
               with:
