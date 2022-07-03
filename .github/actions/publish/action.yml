@@ -9,6 +9,14 @@ inputs:
     description: 'The commit of this version'
     required: true
     type: string
+  build_number:
+    description: 'The build number of the published artifacts'
+    required: true
+    type: string
+  nuget_api_key:
+    description: 'The api key of the nuget repository'
+    required: true
+    type: string
 runs:
   using: "composite"
   steps:
@@ -22,12 +30,15 @@ runs:
           include-prerelease: true
     - name: Pack prettier
       run: ./pack.sh "${{ inputs.version }}"
+      shell: bash
     - name: Bundle
       run: ./bundle.sh "$BUILD_NUMBER"
+      shell: bash
       env:
-          BUILD_NUMBER: ${{ github.run_number }}
+          BUILD_NUMBER: "${{ inputs.build_number }}"
     - name: Attach nuget packages to Github releases
       uses: softprops/action-gh-release@v1
+      shell: bash
       with:
           files: "./nupkg/*.nupkg"
           name: "${{ inputs.version }}"
@@ -35,6 +46,7 @@ runs:
           target_commitish: "${{ inputs.commit }}"
           prerelease: ${{ contains(inputs.version, '-') }}
     - name: Push packages to Nuget registry
+      shell: bash
       run: dotnet nuget push ./nupkg/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY" --skip-duplicate --no-symbols
       env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: "${{ inputs.nuget_api_key }}"
