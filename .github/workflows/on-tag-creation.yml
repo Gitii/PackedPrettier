@@ -15,7 +15,7 @@ jobs:
               with:
                   tagRegex: "v(.*)"
                   tagRegexGroup: 1
-            - uses: ./.github/workflows/publish.yml
+            - uses: ./.github/actions/publish
               with:
                 version: "${{ steps.tagName.outputs.tag }}"
                 commit: "${{ github.sha }}"
