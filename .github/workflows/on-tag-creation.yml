@@ -15,9 +15,15 @@ jobs:
               with:
                   tagRegex: "v(.*)"
                   tagRegexGroup: 1
+            - name: Build Changelog
+              id: github_release
+              uses: mikepenz/release-changelog-builder-action@v3
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - uses: ./.github/actions/publish
               with:
                 version: "${{ steps.tagName.outputs.tag }}"
                 commit: "${{ github.sha }}"
                 build_number: "${{ github.run_number }}"
                 nuget_api_key: "${{ secrets.NUGET_API_KEY }}"
+                release_notes: "${{ steps.github_release.outputs.changelog }}"
