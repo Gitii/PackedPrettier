@@ -21,7 +21,7 @@ jobs:
             - uses: rickstaa/action-create-tag@v1
               if: ${{ env.PRETTIER_TAG_NAME != env.TAG_NAME }}
               with:
-                tag: "${{ env.PRETTIER_TAG_NAME }}"
+                tag: "v${{ env.PRETTIER_TAG_NAME }}"
             - name: Create new release when there is a new prettier release
               uses: ./.github/actions/publish
               if: ${{ env.PRETTIER_TAG_NAME != env.TAG_NAME }}
