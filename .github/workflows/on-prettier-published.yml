@@ -30,3 +30,4 @@ jobs:
                 version: "${{ env.PRETTIER_TAG_NAME }}"
                 build_number: "${{ github.run_number }}"
                 nuget_api_key: "${{ secrets.NUGET_API_KEY }}"
+                release_notes: "Update for new prettier version ${{ env.PRETTIER_TAG_NAME }}"
