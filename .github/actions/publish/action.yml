@@ -38,7 +38,6 @@ runs:
           BUILD_NUMBER: "${{ inputs.build_number }}"
     - name: Attach nuget packages to Github releases
       uses: softprops/action-gh-release@v1
-      shell: bash
       with:
           files: "./nupkg/*.nupkg"
           name: "${{ inputs.version }}"
