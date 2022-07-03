@@ -19,7 +19,7 @@ jobs:
               with:
                 tag: "${{ env.PRETTIER_TAG_NAME }}"
             - name: Create new release when there is a new prettier release
-              uses: .github/workflows/publish.yml@refactor-workflows
+              uses: ./.github/workflows/publish.yml
               if: ${{ env.PRETTIER_TAG_NAME != env.TAG_NAME }}
               with:
                 commit: ${{ github.event.head_commit.sha }}
