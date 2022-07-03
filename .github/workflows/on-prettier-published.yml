@@ -29,4 +29,4 @@ jobs:
                 commit: ${{ github.event.head_commit.sha }}
                 version: "${{ env.PRETTIER_TAG_NAME }}"
                 build_number: "${{ github.run_number }}"
-                nuget_api_key: "${{ inputs.nuget_api_key }}"
+                nuget_api_key: "${{ secrets.NUGET_API_KEY }}"
