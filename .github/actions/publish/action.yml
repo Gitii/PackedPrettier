@@ -1,16 +1,16 @@
 name: "Publish"
 
 inputs:
-  version:
-    description: 'The version'
+  prettier_version:
+    description: 'The version of prettier'
+    required: true
+    type: string
+  tool_version:
+    description: 'The version of the dotnet tool'
     required: true
     type: string
   commit:
     description: 'The commit of this version'
-    required: true
-    type: string
-  build_number:
-    description: 'The build number of the published artifacts'
     required: true
     type: string
   nuget_api_key:
@@ -36,22 +36,20 @@ runs:
               7.0.x
           include-prerelease: false
     - name: Pack prettier
-      run: ./pack.sh "${{ inputs.version }}"
+      run: ./pack.sh "${{ inputs.prettier_version }}"
       shell: bash
     - name: Bundle
-      run: ./bundle.sh $(($BUILD_NUMBER + 200)) 
+      run: ./bundle.sh "${{ inputs.tool_version }}"
       shell: bash
-      env:
-          BUILD_NUMBER: "${{ inputs.build_number }}"
     - name: Attach nuget packages to Github releases
       uses: softprops/action-gh-release@v1
       with:
           files: "./nupkg/*.nupkg"
           body: "${{ inputs.release_notes }}"
-          name: "${{ inputs.version }}"
+          name: "${{ inputs.tool_version }} (prettier: ${{ inputs.prettier_version }})"
           tag_name: "${{ inputs.tag_name }}"
           target_commitish: "${{ inputs.commit }}"
-          prerelease: ${{ contains(inputs.version, '-') }}
+          prerelease: ${{ contains(inputs.tool_version, '-') }}
     - name: Push packages to Nuget registry
       shell: bash
       run: dotnet nuget push ./nupkg/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY" --skip-duplicate --no-symbols

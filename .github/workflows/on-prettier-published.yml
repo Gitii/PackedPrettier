@@ -27,8 +27,8 @@ jobs:
               if: ${{ env.PRETTIER_TAG_NAME != env.TAG_NAME }}
               with:
                 commit: ${{ github.event.head_commit.sha }}
-                version: "${{ env.PRETTIER_TAG_NAME }}"
-                build_number: "${{ github.run_number }}"
+                prettier_version: "${{ env.PRETTIER_TAG_NAME }}"
+                tool_version: "${{ env.PRETTIER_TAG_NAME }}.${{ github.run_number }}"
                 nuget_api_key: "${{ secrets.NUGET_API_KEY }}"
                 release_notes: "Update for new prettier version ${{ env.PRETTIER_TAG_NAME }}"
                 tag_name: "${{ env.PRETTIER_TAG_NAME }}"
