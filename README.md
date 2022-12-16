@@ -24,10 +24,15 @@ You can install it using `dotnet tool install`, both as global and local tool.
 
 Install as local `dotnet tool`:
 
-```shell
-dotnet new tool-manifest # if PackedPrettier is your first tool
-dotnet tool install PackedPrettier # will take a few seconds
-```
+1. If you haven't used any other dotnet tools yet, create a tool manifest first:
+   ```shell
+   dotnet new tool-manifest
+   ```
+2. Install PackedPrettier 
+   ```shell
+   dotnet tool install PackedPrettier
+   ```
+
 
 ## How to use
 
@@ -66,6 +71,8 @@ They aren't used by default. You need to tell `prettier` where to find them.
 Because the plugins are part of the packed `prettier` binary, the files are stored in a virtual filesystem.
 
 For Windows that's `C:\snapshot\node_modules` and `/snapshot/node_modules` for unix systems.
+This doesn't map to a real directory on your machine but is a placeholder that tells the
+packed binary to "re-route" the request to the shipped files at runtime.
 
 So if you want to load `prettier/plugin-xml`, then you need to write:
 
@@ -73,13 +80,17 @@ So if you want to load `prettier/plugin-xml`, then you need to write:
 dotnet pprettier --write <file path> --plugin=/snapshot/node_modules/@prettier/plugin-xml
 ```
 
-To make this portable, `PackedPrettier` will replace `<NodeModulesPath>` at runtime with the correct path:
+> :exclamation: Do not replace `/snapshot/node_modules/` (or `C:\snapshot\node_modules` on Windows) with a real path!
+
+To make this portable across Windows and Linux machines, `PackedPrettier` will replace the magic string `<NodeModulesPath>` at runtime with the correct path.
+
+That means you can just write:
 
 ```shell
 dotnet pprettier --write <file path> --plugin=<NodeModulesPath>/@prettier/plugin-xml
 ```
 
-This will work on any operating system.
+and it will work on any supported operating system.
 
 Example with `test.xml`:
 
@@ -126,11 +137,18 @@ arguments = csharpier "{file}"
 
 and the loader requires either
 
--   .Net Core 3.1
-
--   .Net 5
-
 -   .Net 6
+
+-   .Net 7
+
+
+> :exclamation: Support for .NET Core 3.1 and .NET 5 has been dropped because they are out of support.
+
+# Mac OS support
+
+This is not possible because executable has to be signed (with either an adhoc signature) or an Apple Developer ID.
+Checkout the [official `pkg` readme](https://github.com/vercel/pkg#targets) for details.
+
 
 # Found a bug? Have a suggestion?
 
