@@ -11,11 +11,6 @@ on:
         description: 'Dotnet tool version'
         required: true 
         type: string
-      TOOL_VERSION_SUFFIX:
-        description: 'Suffix of the dotnet tool version. Including dash (-)!'
-        required: false 
-        type: string
-        default: ''
       TAG_NAME:
         description: 'Name of the non-existing tag which will be created and then used for the release'
         required: true 
@@ -34,7 +29,7 @@ jobs:
             - uses: ./.github/actions/publish
               with:
                 prettier_version: "${{ inputs.PRETTIER_VERSION }}"
-                tool_version: "${{ inputs.TOOL_VERSION }}.${{ github.run_number }}${{ inputs.TOOL_VERSION_SUFFIX }}"
+                tool_version: "${{ inputs.TOOL_VERSION }}"
                 commit: "${{ github.sha }}"
                 build_number: "${{ github.run_number }}"
                 nuget_api_key: "${{ secrets.NUGET_API_KEY }}"
