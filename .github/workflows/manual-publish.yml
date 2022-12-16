@@ -1,20 +1,22 @@
-name: "On tag creation, trigger publish"
+name: "Manual publish"
 
 on:
-    push:
-        tags:
-            - "v*"
+  workflow_dispatch:
+    inputs:
+      PRETTIER_VERSION:
+        description: 'Prettier version'
+        required: true 
+        type: string
+      TAG_NAME:
+        description: 'Name of the non-existing tag which will be created and then used for the release'
+        required: true 
+        type: string
 
 jobs:
     publish:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - uses: olegtarasov/get-tag@v2.1
-              id: tagName
-              with:
-                  tagRegex: "v(.*)"
-                  tagRegexGroup: 1
             - name: Build Changelog
               id: github_release
               uses: mikepenz/release-changelog-builder-action@v3
@@ -22,8 +24,9 @@ jobs:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - uses: ./.github/actions/publish
               with:
-                version: "${{ steps.tagName.outputs.tag }}"
+                version: "${{ inputs.PRETTIER_VERSION }}"
                 commit: "${{ github.sha }}"
                 build_number: "${{ github.run_number }}"
                 nuget_api_key: "${{ secrets.NUGET_API_KEY }}"
                 release_notes: "${{ steps.github_release.outputs.changelog }}"
+                tag_name: "${{ inputs.TAG_NAME }}"
