@@ -39,7 +39,7 @@ runs:
       run: ./pack.sh "${{ inputs.version }}"
       shell: bash
     - name: Bundle
-      run: ./bundle.sh "$BUILD_NUMBER"
+      run: ./bundle.sh $(($BUILD_NUMBER + 200)) 
       shell: bash
       env:
           BUILD_NUMBER: "${{ inputs.build_number }}"
