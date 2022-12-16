@@ -2,7 +2,6 @@
 
 set -e
 
-
 if [[ -z "$1" ]]; then
     echo "First argument must be the prettier version number"
     exit 1
@@ -34,7 +33,7 @@ cp "$SRC_DIR/package.json" "$TEMP_DIR/package.json"
 cp "$SRC_DIR/pkg.config.json" "$TEMP_DIR/pkg.config.json"
 
 yarn install
-yarn add "prettier@$PRETTIER_VERSION" @prettier/plugin-xml prettier-plugin-sh
+yarn add "prettier@$PRETTIER_VERSION" @prettier/plugin-xml prettier-plugin-sh@0.8.2
 
 mkdir -p "$DST_DIR/win-x64/"
 yarn pkg -t node18-win ./node_modules/prettier/bin-prettier.js -o "$DST_DIR/win-x64/prettier.exe" --config ./pkg.config.json

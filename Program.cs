@@ -73,7 +73,6 @@ namespace PackedPrettier
                 .WithValidation(CommandResultValidation.None)
                 .WithStandardOutputPipe(PipeTarget.ToStream(stdOut))
                 .WithStandardErrorPipe(PipeTarget.ToStream(stdErr))
-                .WithStandardInputPipe(PipeSource.FromStream(stdIn, true))
                 .ExecuteAsync()
                 .ConfigureAwait(false);
 
