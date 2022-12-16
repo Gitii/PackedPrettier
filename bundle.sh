@@ -3,7 +3,7 @@
 set -e
 
 if [[ -z "$1" ]]; then
-    echo "First argument must be the build number"
+    echo "First argument must be the version number"
     exit 1
 fi
 

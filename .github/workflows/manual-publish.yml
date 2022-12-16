@@ -12,7 +12,7 @@ on:
         required: true 
         type: string
       TOOL_VERSION_SUFFIX:
-        description: 'Suffix of the dotnet tool version. Including dash ('-')!'
+        description: 'Suffix of the dotnet tool version. Including dash (-)!'
         required: false 
         type: string
         default: ''
