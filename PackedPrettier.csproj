@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>pprettier</ToolCommandName>
+    <RollForward>major</RollForward>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageTags>prettier;dotnet</PackageTags>
