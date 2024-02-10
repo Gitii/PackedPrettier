@@ -4,8 +4,6 @@
     "main": "index.js",
     "license": "MIT",
     "private": true,
-    "dependencies": {},
-    "devDependencies": {
-        "pkg": "^5.5.2"
-    }
+    "module": "module",
+    "dependencies": {}
 }

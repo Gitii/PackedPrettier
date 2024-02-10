@@ -7,11 +7,12 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-BUILD_NUMBER="$1"
-
-if [[ ! -f ./packed/version ]]; then
-    echo "Pack prettier first!"
+if [[ -z "$2" ]]; then
+    echo "First argument must be the prettier version number"
     exit 1
 fi
 
-dotnet pack -c Release /p:Version="$(cat ./packed/version).$BUILD_NUMBER"
+BUILD_NUMBER="$1"
+PRETTIER_VERSION="$2"
+
+dotnet pack -c Release /p:Version="$PRETTIER_VERSION.$BUILD_NUMBER"

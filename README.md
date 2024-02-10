@@ -58,62 +58,24 @@ In Visual Studio
 
 When you save a file in VS, `prettier` will reformat it
 
-# Plugins
+# Migration from v2 to v3
 
-By default, two plugins are included (always the latest version at time of compilation of `prettier`):
+Prettier has migrated to es modules. This means that the `prettier` package is no longer compatible with `pkg` and `PackedPrettier` v2. Previously the `pkg` package has been used to pack `prettier` into an executable. This is no longer possible. The new version of `PackedPrettier` uses a different approach to pack `prettier` into an executable: `deno`. `deno` compiles `prettier` into an single executable. This executable is then used by the `PackedPrettier` loader to run `prettier` in the same way as before.
 
--   [prettier/plugin-xml: Prettier XML plugin](https://github.com/prettier/plugin-xml)
+Deno does not allow to import modules at runtime, see https://github.com/denoland/deno/issues/8655 for details.
+That means but plugins and javascript config files (for example `prettier.config.js`) are not supported anymore.
 
--   [prettier-plugin-sh](https://github.com/rx-ts/prettier/tree/master/packages/sh)
+If this is a showstopper for you, please open an issue and we can discuss a solution. A potential solution could be to use `bun` to pack `prettier`. But `bun` has no stable release for windows yet.
 
-They aren't used by default. You need to tell `prettier` where to find them.
 
-Because the plugins are part of the packed `prettier` binary, the files are stored in a virtual filesystem.
+# Restrictions
 
-For Windows that's `C:\snapshot\node_modules` and `/snapshot/node_modules` for unix systems.
-This doesn't map to a real directory on your machine but is a placeholder that tells the
-packed binary to "re-route" the request to the shipped files at runtime.
+Compared to run `prettier` with `node` there are some restrictions:
+* Plugins are not supported
+* Javascript config files (for example `prettier.config.js`) are not supported
 
-So if you want to load `prettier/plugin-xml`, then you need to write:
-
-```shell
-dotnet pprettier --write <file path> --plugin=/snapshot/node_modules/@prettier/plugin-xml
-```
-
-> :exclamation: Do not replace `/snapshot/node_modules/` (or `C:\snapshot\node_modules` on Windows) with a real path!
-
-To make this portable across Windows and Linux machines, `PackedPrettier` will replace the magic string `<NodeModulesPath>` at runtime with the correct path.
-
-That means you can just write:
-
-```shell
-dotnet pprettier --write <file path> --plugin=<NodeModulesPath>/@prettier/plugin-xml
-```
-
-and it will work on any supported operating system.
-
-Example with `test.xml`:
-
-```shell
-dotnet pprettier --write test.xml --plugin=<NodeModulesPath>/@prettier/plugin-xml
-```
-
-| Plugin                 | File types                                                | Lookup Path                              |
-| ---------------------- | --------------------------------------------------------- | ---------------------------------------- |
-| `prettier-plugin-sh`   | shellscript, Dockerfile, gitignore, dotenv and many more! | `<NodeModulesPath>/prettier-plugin-sh`   |
-| `@prettier/plugin-xml` | xml                                                       | `<NodeModulesPath>/@prettier/plugin-xml` |
-
-## Custom `.onsaveconfig` entries
-
-```
-[*.{xml,csproj,xaml,appxmanifest,props,wapproj}]
-command = dotnet
-arguments = pprettier --write "{file}" --plugin "<NodeModulesPath>/@prettier/plugin-xml" --parser "xml"
-
-[*.sh]
-command = dotnet
-arguments = pprettier --write "{file}" --plugin "<NodeModulesPath>/prettier-plugin-sh"
-```
+This is because `deno` does not allow to import modules at runtime.
+If this is a showstopper for you, please open an issue and we can discuss a solution. A potential solution could be to use `bun` to pack `prettier`. But `bun` has no stable release for windows yet.
 
 # What about C# files (_.cs_)?
 
@@ -141,13 +103,14 @@ and the loader requires either
 
 -   .Net 7
 
+-   .Net 8
 
 > :exclamation: Support for .NET Core 3.1 and .NET 5 has been dropped because they are out of support.
 
 # Mac OS support
 
 This is not possible because executable has to be signed (with either an adhoc signature) or an Apple Developer ID.
-Checkout the [official `pkg` readme](https://github.com/vercel/pkg#targets) for details.
+Checkout the [official `pkg` readme](https://github.com/vercel/pkg#targets) for historical details. The same restrictions apply to `deno`, too.
 
 
 # Found a bug? Have a suggestion?

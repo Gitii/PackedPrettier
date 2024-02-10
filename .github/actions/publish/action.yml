@@ -1,59 +1,57 @@
 name: "Publish"
+description: Publish a new version of the package
 
 inputs:
-  version:
-    description: 'The version'
-    required: true
-    type: string
-  commit:
-    description: 'The commit of this version'
-    required: true
-    type: string
-  build_number:
-    description: 'The build number of the published artifacts'
-    required: true
-    type: string
-  nuget_api_key:
-    description: 'The api key of the nuget repository'
-    required: true
-    type: string
-  release_notes:
-    description: 'The release notes'
-    required: true
-    type: string
-  tag_name:
-    description: 'The release notes'
-    required: true
-    type: string
+    version:
+        description: "The version"
+        required: true
+        type: string
+    commit:
+        description: "The commit of this version"
+        required: true
+        type: string
+    build_number:
+        description: "The build number of the published artifacts"
+        required: true
+        type: string
+    nuget_api_key:
+        description: "The api key of the nuget repository"
+        required: true
+        type: string
+    release_notes:
+        description: "The release notes"
+        required: true
+        type: string
+    tag_name:
+        description: "The release notes"
+        required: true
+        type: string
 runs:
-  using: "composite"
-  steps:
-    - name: Setup .NET SDKs
-      uses: actions/setup-dotnet@v1
-      with:
-          dotnet-version: |
-              6.0.x
-              7.0.x
-          include-prerelease: false
-    - name: Pack prettier
-      run: ./pack.sh "${{ inputs.version }}"
-      shell: bash
-    - name: Bundle
-      run: ./bundle.sh "$BUILD_NUMBER"
-      shell: bash
-      env:
-          BUILD_NUMBER: "${{ inputs.build_number }}"
-    - name: Attach nuget packages to Github releases
-      uses: softprops/action-gh-release@v1
-      with:
-          files: "./nupkg/*.nupkg"
-          body: "${{ inputs.release_notes }}"
-          name: "${{ inputs.version }}"
-          tag_name: "${{ inputs.tag_name }}"
-          target_commitish: "${{ inputs.commit }}"
-          prerelease: ${{ contains(inputs.version, '-') }}
-    - name: Push packages to Nuget registry
-      shell: bash
-      run: dotnet nuget push ./nupkg/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY" --skip-duplicate --no-symbols
-      env:
-          NUGET_API_KEY: "${{ inputs.nuget_api_key }}"
+    using: "composite"
+    steps:
+        - name: Setup .NET SDKs
+          uses: actions/setup-dotnet@v1
+          with:
+              dotnet-version: |
+                  6.0.x
+                  7.0.x
+                  8.0.x
+              include-prerelease: false
+        - name: Bundle
+          run: ./bundle.sh "${{ inputs.build_number }}" "${{ inputs.version }}"
+          shell: bash
+        - name: Attach nuget packages to Github releases
+          uses: softprops/action-gh-release@v1
+          with:
+              files: "./nupkg/*.nupkg"
+              body: "${{ inputs.release_notes }}"
+              name: "${{ inputs.version }}"
+              tag_name: "${{ inputs.tag_name }}"
+              target_commitish: "${{ inputs.commit }}"
+              prerelease: ${{ contains(inputs.version, '-') }}
+        - name: Push packages to Nuget registry
+          shell: bash
+          if: ${{ false }}
+          run: dotnet nuget push ./nupkg/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY" --skip-duplicate --no-symbols
+          env:
+              NUGET_API_KEY: "${{ inputs.nuget_api_key }}"

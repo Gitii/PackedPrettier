@@ -2,7 +2,6 @@
 
 set -e
 
-
 if [[ -z "$1" ]]; then
     echo "First argument must be the prettier version number"
     exit 1
@@ -26,22 +25,50 @@ if [[ "$KEEP" = "false" ]]; then
     trap "rm -rf $TEMP_DIR" EXIT
 fi
 
+DST_DIR_OS=""
+DST_NAME=""
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    DST_DIR_OS="linux-x64"
+    DST_NAME="prettier"
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+    DST_DIR_OS="win-x64"
+    DST_NAME="prettier.exe"
+elif [[ "$OSTYPE" == "msys" ]]; then
+    DST_DIR_OS="win-x64"
+    DST_NAME="prettier.exe"
+elif [[ "$OSTYPE" == "win32" ]]; then
+    DST_DIR_OS="win-x64"
+    DST_NAME="prettier.exe"
+else
+    echo "Unsupported OS: $OSTYPE"
+    exit 1
+fi
+
 pushd "$TEMP_DIR"
 echo "Using temporary directory $TEMP_DIR"
 echo "Target directory is $DST_DIR"
 
 cp "$SRC_DIR/package.json" "$TEMP_DIR/package.json"
-cp "$SRC_DIR/pkg.config.json" "$TEMP_DIR/pkg.config.json"
+cp "$SRC_DIR/prettier-deno.mjs" "$TEMP_DIR/prettier-deno.mjs"
 
 yarn install
-yarn add "prettier@$PRETTIER_VERSION" @prettier/plugin-xml prettier-plugin-sh
+yarn add "prettier@$PRETTIER_VERSION"
 
-mkdir -p "$DST_DIR/win-x64/"
-yarn pkg -t node18-win ./node_modules/prettier/bin-prettier.js -o "$DST_DIR/win-x64/prettier.exe" --config ./pkg.config.json
+mkdir -p "$DST_DIR/$DST_DIR_OS/"
 
-mkdir -p "$DST_DIR/linux-x64/"
-yarn pkg -t node18-linux ./node_modules/prettier/bin-prettier.js -o "$DST_DIR/linux-x64/prettier" --config ./pkg.config.json
+APP_PATH="$DST_DIR/$DST_DIR_OS/$DST_NAME"
 
-echo -n $PRETTIER_VERSION > "$DST_DIR/version"
+rm -f "$APP_PATH"
+
+deno compile --unstable --allow-read --allow-env --allow-write --allow-sys --node-modules-dir=false --output="$APP_PATH" ./prettier-deno.mjs
+
+# do a quick test if the binary is working
+ACTUAL_VERSION=$("$APP_PATH" --version)
+
+if [[ "$ACTUAL_VERSION" != "$PRETTIER_VERSION" ]]; then
+    echo "Expected version $PRETTIER_VERSION, but got $ACTUAL_VERSION"
+    exit 1
+fi
 
 popd
