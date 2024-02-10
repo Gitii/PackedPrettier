@@ -51,11 +51,11 @@ jobs:
             - uses: actions/download-artifact@v4
               with:
                   name: binary-windows
-                  path: packed/win-x64/prettier.exe
+                  path: packed/win-x64/
             - uses: actions/download-artifact@v4
               with:
                   name: binary-linux
-                  path: packed/linux-x64/prettier
+                  path: packed/linux-x64/
             - name: Build Changelog
               id: github_release
               uses: mikepenz/release-changelog-builder-action@v3
