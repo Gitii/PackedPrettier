@@ -56,6 +56,14 @@ jobs:
               with:
                   name: binary-linux
                   path: packed/linux-x64/
+            - name: Fix linux artifact
+              run: |
+                  if [ -f packed/linux-x64/prettier/prettier ]; then
+                      mv packed/linux-x64/prettier/prettier packed/linux-x64/prettier2
+                      rmdir packed/linux-x64/prettier
+                      mv packed/linux-x64/prettier2 packed/linux-x64/prettier
+                  fi
+              shell: bash
             - name: Build Changelog
               id: github_release
               uses: mikepenz/release-changelog-builder-action@v3
