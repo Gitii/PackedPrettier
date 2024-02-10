@@ -12,7 +12,7 @@ internal class Program
     {
         var prettierCLi = GetPlatformPrettier(AppContext.BaseDirectory);
 
-        return ExecutePrettierAsync(prettierCLi, args);
+        return ExecutePrettierAsync(prettierCLi, args.Length > 0 ? args : new[] { "--help" });
     }
 
     private static async Task<int> ExecutePrettierAsync(string prettierCLi, string[] args)

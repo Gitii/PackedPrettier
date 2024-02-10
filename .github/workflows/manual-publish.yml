@@ -16,7 +16,7 @@ jobs:
     build-linux:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - uses: denoland/setup-deno@v1
               with:
                   deno-version: v1.x
@@ -30,7 +30,7 @@ jobs:
     build-windows:
         runs-on: windows-latest
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - uses: denoland/setup-deno@v1
               with:
                   deno-version: v1.x
@@ -47,13 +47,23 @@ jobs:
             - build-linux
             - build-windows
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - uses: actions/download-artifact@v4
               with:
                   name: binary-windows
+                  path: packed/win-x64/
             - uses: actions/download-artifact@v4
               with:
                   name: binary-linux
+                  path: packed/linux-x64/
+            - name: Fix linux artifact
+              run: |
+                  if [ -f packed/linux-x64/prettier/prettier ]; then
+                      mv packed/linux-x64/prettier/prettier packed/linux-x64/prettier2
+                      rmdir packed/linux-x64/prettier
+                      mv packed/linux-x64/prettier2 packed/linux-x64/prettier
+                  fi
+              shell: bash
             - name: Build Changelog
               id: github_release
               uses: mikepenz/release-changelog-builder-action@v3

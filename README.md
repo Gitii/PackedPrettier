@@ -67,12 +67,15 @@ That means but plugins and javascript config files (for example `prettier.config
 
 If this is a showstopper for you, please open an issue and we can discuss a solution. A potential solution could be to use `bun` to pack `prettier`. But `bun` has no stable release for windows yet.
 
+I still consider the windows build of `PackedPrettier` as experimental. If you encounter any issues, please open an issue.
+
 
 # Restrictions
 
 Compared to run `prettier` with `node` there are some restrictions:
-* Plugins are not supported
+* Plugins are not supported (see https://github.com/denoland/deno/issues/8655 for details)
 * Javascript config files (for example `prettier.config.js`) are not supported
+* All restrictions of `deno` apply
 
 This is because `deno` does not allow to import modules at runtime.
 If this is a showstopper for you, please open an issue and we can discuss a solution. A potential solution could be to use `bun` to pack `prettier`. But `bun` has no stable release for windows yet.
